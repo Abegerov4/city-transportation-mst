@@ -28,9 +28,15 @@ public class Graph {
         adjacencyList.get(destination).add(new Edge(destination, source, weight));
     }
 
+    // Добавьте эти методы - они заменят getVerticesCount() и getEdgesCount()
+    public int getVertices() { return vertices; }
+    public int getEdges() { return edges.size(); }
+
+    // Для обратной совместимости тоже добавим
     public int getVerticesCount() { return vertices; }
     public int getEdgesCount() { return edges.size(); }
-    public List<Edge> getEdges() { return new ArrayList<>(edges); }
+
+    public List<Edge> getEdgesList() { return new ArrayList<>(edges); }
     public List<Edge> getAdjacentEdges(int vertex) {
         if (vertex < 0 || vertex >= vertices) {
             throw new IllegalArgumentException("Invalid vertex index");
