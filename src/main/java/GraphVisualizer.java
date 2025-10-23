@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 /**
  * Utility class for generating visual representations of graphs
  */
-public class edg.GraphVisualizer {
+public class GraphVisualizer {
 
     public static void generateGraphImage(Graph graph, String filename) {
         int width = 800;
