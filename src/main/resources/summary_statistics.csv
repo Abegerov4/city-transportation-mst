@@ -1,0 +1,26 @@
+SUMMARY STATISTICS
+==================
+
+Overall Performance:
+Category,GraphCount,AvgVertices,AvgEdges,AvgPrimTimeMS,AvgKruskalTimeMS,AvgPrimOps,AvgKruskalOps,PrimFasterCount,KruskalFasterCount,PrimWinRate
+Overall,30,607,0,1541,1,0,518,0,457,35920,8,44978,4,16,14,53,3%
+
+Performance by Graph Size:
+SizeCategory,GraphCount,AvgVertices,AvgEdges,AvgPrimTimeMS,AvgKruskalTimeMS,AvgPrimOps,AvgKruskalOps,PrimFasterCount,KruskalFasterCount,PrimWinRate
+Small,5,12,8,25,6,0,117,0,054,314,2,494,2,1,4,20,0%
+Medium,10,145,3,581,2,0,238,0,267,9970,9,13427,5,9,1,90,0%
+Large,10,639,7,2493,3,0,836,0,602,54119,1,68578,7,1,9,10,0%
+Extra Large,5,2059,4,3072,2,0,844,0,953,87030,8,105364,0,5,0,100,0%
+
+Performance by Edge Density:
+DensityCategory,GraphCount,AvgDensity,PrimWinRate,AvgTimeAdvantageMS
+Very Sparse (<0.1),24,0,027,58,3%,-0,063
+Sparse (0.1-0.3),2,0,160,100,0%,0,004
+Medium (0.3-0.6),3,0,369,0,0%,-0,105
+Dense (>0.6),1,0,800,0,0%,-0,002
+
+Algorithm Comparison:
+Metric,Prim,Kruskal,Advantage
+Average Time (ms),0,518,0,457,Kruskal
+Average Operations,35920,8,44978,4,Prim
+Win Rate,53,3%,46,7%,Prim
