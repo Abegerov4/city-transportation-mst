@@ -48,15 +48,18 @@ public class PrimMST {
             totalCost += edge.getWeight();
             assignmentCount += 2;
 
-            // Find the vertex not yet in MST and add its edges
+            // Find the vertex not yet in MST
             int newVertex = inMST[u] ? v : u;
-            inMST[newVertex] = true;
-            assignmentCount += 2;
 
-            // Add all edges from the new vertex to priority queue
+            // Mark new vertex as visited
+            inMST[newVertex] = true;
+            assignmentCount++;
+
+            // Add all edges from the new vertex that connect to unvisited vertices
             for (Edge adjEdge : graph.getAdjacentEdges(newVertex)) {
+                int neighbor = adjEdge.getDestination();
                 comparisonCount++;
-                if (!inMST[adjEdge.getDestination()]) {
+                if (!inMST[neighbor]) {
                     pq.offer(adjEdge);
                     queueOperations++;
                 }
@@ -64,7 +67,7 @@ public class PrimMST {
         }
 
         long endTime = System.nanoTime();
-        double executionTimeMs = (endTime - startTime) / 1_000_000.0; // Дробные миллисекунды
+        double executionTimeMs = (endTime - startTime) / 1_000_000.0;
         int totalOperations = comparisonCount + assignmentCount + queueOperations;
 
         return new MSTResult("Prim's Algorithm", mstEdges, totalCost,

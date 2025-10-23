@@ -9,40 +9,36 @@ public class KruskalMST {
         long startTime = System.nanoTime();
         resetCounters();
 
-        List<Edge> edges = new ArrayList<>(graph.getEdges());
+        List<Edge> edges = new ArrayList<>(graph.getEdgesList());
         int vertices = graph.getVerticesCount();
         List<Edge> mstEdges = new ArrayList<>();
         int totalCost = 0;
 
-        // Sort edges by weight with operation counting
-        Collections.sort(edges, (e1, e2) -> {
-            comparisonCount++;
-            return Integer.compare(e1.getWeight(), e2.getWeight());
-        });
-
-        // Approximate sort operations (log(n) comparisons per element)
+        // Sort edges by weight
+        Collections.sort(edges);
+        // Approximate sort operations: n*log(n) comparisons
         comparisonCount += (int) (edges.size() * Math.log(edges.size()));
 
         UnionFind uf = new UnionFind(vertices);
-        assignmentCount += vertices; // Initialize Union-Find
 
         for (Edge edge : edges) {
             comparisonCount++;
 
             if (mstEdges.size() == vertices - 1) break;
 
-            int root1 = uf.find(edge.getSource());
-            int root2 = uf.find(edge.getDestination());
-            unionFindOperations += 2;
+            int u = edge.getSource();
+            int v = edge.getDestination();
+
+            int rootU = uf.find(u);
+            int rootV = uf.find(v);
 
             // If including this edge doesn't cause cycle, include it in MST
             comparisonCount++;
-            if (root1 != root2) {
+            if (rootU != rootV) {
                 mstEdges.add(edge);
                 totalCost += edge.getWeight();
-                uf.union(root1, root2);
-                assignmentCount += 3;
-                unionFindOperations++;
+                uf.union(rootU, rootV);
+                assignmentCount += 2;
             }
         }
 
@@ -72,11 +68,13 @@ public class KruskalMST {
                 parent[i] = i;
                 rank[i] = 0;
             }
+            assignmentCount += size * 2;
         }
 
         public int find(int x) {
-            comparisonCount++;
+            unionFindOperations++;
             if (parent[x] != x) {
+                comparisonCount++;
                 assignmentCount++;
                 parent[x] = find(parent[x]); // Path compression
             }
@@ -99,7 +97,7 @@ public class KruskalMST {
                     assignmentCount++;
                     parent[rootY] = rootX;
                 } else {
-                    comparisonCount++;
+                    comparisonCount += 2;
                     assignmentCount += 2;
                     parent[rootY] = rootX;
                     rank[rootX]++;

@@ -5,7 +5,7 @@ public class MSTResult {
     private final String algorithmName;
     private final List<Edge> mstEdges;
     private final int totalCost;
-    private final double executionTimeMs; // Изменено на double для точности
+    private final double executionTimeMs;
     private final int operationsCount;
     private final int vertices;
 
@@ -23,7 +23,7 @@ public class MSTResult {
     public String getAlgorithmName() { return algorithmName; }
     public List<Edge> getMstEdges() { return new ArrayList<>(mstEdges); }
     public int getTotalCost() { return totalCost; }
-    public double getExecutionTime() { return executionTimeMs; } // Изменено на double
+    public double getExecutionTime() { return executionTimeMs; }
     public int getOperationsCount() { return operationsCount; }
     public int getVertices() { return vertices; }
     public int getMstEdgesCount() { return mstEdges.size(); }
