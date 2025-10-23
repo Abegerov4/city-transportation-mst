@@ -143,4 +143,20 @@ public class JSONProcessor {
             this.graph = graph;
         }
     }
+
+    // Создание демо-графа для OOP демонстрации
+    public static Graph createDemoGraph() {
+        // Создаем простой граф вручную для демонстрации
+        Graph graph = new Graph(6);
+        graph.addEdge(0, 1, 4);
+        graph.addEdge(0, 2, 2);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(1, 3, 5);
+        graph.addEdge(2, 3, 8);
+        graph.addEdge(2, 4, 10);
+        graph.addEdge(3, 4, 2);
+        graph.addEdge(3, 5, 6);
+        graph.addEdge(4, 5, 3);
+        return graph;
+    }
 }
