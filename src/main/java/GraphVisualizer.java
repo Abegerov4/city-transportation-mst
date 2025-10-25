@@ -7,7 +7,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 /**
- * Utility class for generating visual representations of graphs
+ * Utility class for generating visual representations of graphs.
  */
 public class GraphVisualizer {
 
@@ -24,7 +24,7 @@ public class GraphVisualizer {
         g2d.setColor(Color.WHITE);
         g2d.fillRect(0, 0, width, height);
 
-        // Draw graph info
+        // Draw graph information
         drawGraphInfo(g2d, graph, width);
 
         // Calculate vertex positions
@@ -40,7 +40,7 @@ public class GraphVisualizer {
         try {
             File output = new File("src/main/resources/" + filename);
             ImageIO.write(image, "PNG", output);
-            System.out.println("📊 Graph visualization saved: " + filename);
+            System.out.println("Graph visualization saved: " + filename);
         } catch (IOException e) {
             System.err.println("Failed to save graph image: " + e.getMessage());
         }
@@ -49,7 +49,7 @@ public class GraphVisualizer {
     }
 
     private static Point[] calculateVertexPositions(Graph graph, int width, int height, int margin) {
-        int vertexCount = graph.getVerticesCount(); // Используем существующий метод
+        int vertexCount = graph.getVerticesCount(); // Using existing method
         Point[] positions = new Point[vertexCount];
 
         if (vertexCount == 1) {
@@ -57,7 +57,7 @@ public class GraphVisualizer {
             return positions;
         }
 
-        // Arrange vertices in a circle
+        // Arrange vertices in a circular layout
         double angleStep = 2 * Math.PI / vertexCount;
         int radius = Math.min(width, height) / 2 - margin;
         int centerX = width / 2;
@@ -77,7 +77,7 @@ public class GraphVisualizer {
         g2d.setColor(Color.LIGHT_GRAY);
         g2d.setStroke(new BasicStroke(2));
 
-        // Получаем все ребра графа
+        // Retrieve all edges from the graph
         List<Edge> edges = getAllEdges(graph);
 
         for (Edge edge : edges) {
@@ -85,7 +85,7 @@ public class GraphVisualizer {
             Point p2 = positions[edge.getDestination()];
             g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
 
-            // Draw weight
+            // Draw edge weight
             int midX = (p1.x + p2.x) / 2;
             int midY = (p1.y + p2.y) / 2;
             g2d.setColor(Color.BLUE);
@@ -109,7 +109,7 @@ public class GraphVisualizer {
         g2d.setColor(Color.BLACK);
         g2d.setFont(new Font("Arial", Font.BOLD, 14));
 
-        // Используем только существующие методы
+        // Using only existing methods from Graph class
         String info = String.format("Graph | Vertices: %d | Edges: %d | Connected: %s",
                 graph.getVerticesCount(), graph.getEdgesCount(),
                 graph.isConnected());
@@ -120,16 +120,16 @@ public class GraphVisualizer {
         g2d.drawString(stats, 10, 40);
     }
 
-    // Вспомогательный метод для получения всех ребер
+    // Helper method to get all unique edges from the graph
     private static List<Edge> getAllEdges(Graph graph) {
         List<Edge> allEdges = new ArrayList<>();
         int vertices = graph.getVerticesCount();
 
-        // Собираем все уникальные ребра
+        // Collect all unique edges
         for (int i = 0; i < vertices; i++) {
             List<Edge> adjacentEdges = graph.getAdjacentEdges(i);
             for (Edge edge : adjacentEdges) {
-                // Добавляем только если source < destination чтобы избежать дубликатов
+                // Add only if source < destination to avoid duplicates
                 if (edge.getSource() <= edge.getDestination()) {
                     allEdges.add(edge);
                 }
@@ -138,7 +138,7 @@ public class GraphVisualizer {
         return allEdges;
     }
 
-    // Вспомогательный метод для вычисления общего веса
+    // Helper method to calculate the total weight of all edges
     private static int calculateTotalWeight(Graph graph) {
         int totalWeight = 0;
         List<Edge> edges = getAllEdges(graph);

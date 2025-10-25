@@ -2,6 +2,10 @@ import java.util.*;
 import java.io.*;
 import java.nio.file.*;
 
+/**
+ * Represents a graph using an adjacency list structure.
+ * Supports creation, traversal, and JSON-based initialization.
+ */
 public class Graph {
     private final int vertices;
     private final List<Edge> edges;
@@ -28,15 +32,16 @@ public class Graph {
         adjacencyList.get(destination).add(new Edge(destination, source, weight));
     }
 
-    // Добавьте эти методы - они заменят getVerticesCount() и getEdgesCount()
+    // These methods replace getVerticesCount() and getEdgesCount()
     public int getVertices() { return vertices; }
     public int getEdges() { return edges.size(); }
 
-    // Для обратной совместимости тоже добавим
+    // Added for backward compatibility
     public int getVerticesCount() { return vertices; }
     public int getEdgesCount() { return edges.size(); }
 
     public List<Edge> getEdgesList() { return new ArrayList<>(edges); }
+
     public List<Edge> getAdjacentEdges(int vertex) {
         if (vertex < 0 || vertex >= vertices) {
             throw new IllegalArgumentException("Invalid vertex index");
@@ -44,6 +49,9 @@ public class Graph {
         return new ArrayList<>(adjacencyList.get(vertex));
     }
 
+    /**
+     * Checks if the graph is fully connected using DFS.
+     */
     public boolean isConnected() {
         if (vertices == 0) return true;
 
@@ -65,9 +73,12 @@ public class Graph {
         return count;
     }
 
-    // Новый метод: создание графа из JSON данных
+    /**
+     * Creates a graph instance from parsed JSON data.
+     * Used by JSONProcessor to build Graph objects from JSON input files.
+     */
     public static Graph fromJsonData(List<String> nodes, List<Map<String, Object>> edgesData) {
-        // Создаем маппинг имен узлов на индексы
+        // Create mapping of node names to indices
         Map<String, Integer> nodeToIndex = new HashMap<>();
         for (int i = 0; i < nodes.size(); i++) {
             nodeToIndex.put(nodes.get(i), i);
@@ -75,7 +86,7 @@ public class Graph {
 
         Graph graph = new Graph(nodes.size());
 
-        // Добавляем все ребра
+        // Add all edges
         for (Map<String, Object> edgeData : edgesData) {
             String from = (String) edgeData.get("from");
             String to = (String) edgeData.get("to");
@@ -90,7 +101,9 @@ public class Graph {
         return graph;
     }
 
-    // Метод для получения имени узла по индексу (для output)
+    /**
+     * Gets the node name by index for output display or serialization.
+     */
     public static String getNodeName(int index, List<String> nodeNames) {
         if (index >= 0 && index < nodeNames.size()) {
             return nodeNames.get(index);

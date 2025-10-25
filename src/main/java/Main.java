@@ -3,14 +3,14 @@ import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("🚀 CITY TRANSPORTATION NETWORK OPTIMIZATION");
+        System.out.println("CITY TRANSPORTATION NETWORK OPTIMIZATION");
         System.out.println("   Minimum Spanning Tree Algorithms\n");
 
         try {
-            // Демонстрация OOP дизайна графа
+            // Demonstrate OOP-based graph design
             demonstrateOOPGraphDesign();
 
-            // Чтение и обработка всех графов из input.json
+            // Read and process all graphs from input.json
             processAllGraphs();
 
         } catch (Exception e) {
@@ -20,10 +20,10 @@ public class Main {
     }
 
     private static void demonstrateOOPGraphDesign() {
-        System.out.println("\n🎯 DEMONSTRATING OOP GRAPH DESIGN");
+        System.out.println("\nDEMONSTRATING OOP GRAPH DESIGN");
         System.out.println("=================================");
 
-        // Create graph using current implementation
+        // Create graph using the implemented OOP structure
         Graph cityNetwork = JSONProcessor.createDemoGraph();
 
         System.out.println("Created Graph Analysis:");
@@ -32,7 +32,7 @@ public class Main {
         System.out.println("  Connected: " + cityNetwork.isConnected());
         System.out.println("  Adjacent vertices of 2: " + getAdjacentVertices(cityNetwork, 2));
 
-        // Test MST algorithms with new graph
+        // Test MST algorithms on the demo graph
         PrimMST prim = new PrimMST();
         KruskalMST kruskal = new KruskalMST();
 
@@ -45,18 +45,18 @@ public class Main {
         System.out.println("  Costs Match: " + (primResult.getTotalCost() == kruskalResult.getTotalCost()));
         System.out.println("  Both Valid: " + (primResult.isValidMST() && kruskalResult.isValidMST()));
 
-        // Генерация визуализации
+        // Generate visualization
         try {
             GraphVisualizer.generateGraphImage(cityNetwork, "graph_demo.png");
         } catch (Exception e) {
-            System.out.println("⚠️  Graph visualization skipped: " + e.getMessage());
+            System.out.println("Graph visualization skipped: " + e.getMessage());
         }
 
-        System.out.println("✅ OOP Graph Design Successfully Integrated with MST Algorithms");
+        System.out.println("OOP Graph Design Successfully Integrated with MST Algorithms");
         System.out.println("=================================\n");
     }
 
-    // Вспомогательный метод для получения смежных вершин
+    // Helper method to get adjacent vertices of a node
     private static List<Integer> getAdjacentVertices(Graph graph, int vertex) {
         List<Integer> adjacent = new ArrayList<>();
         for (Edge edge : graph.getAdjacentEdges(vertex)) {
@@ -67,84 +67,84 @@ public class Main {
     }
 
     private static void processAllGraphs() throws IOException {
-        // Чтение графов из JSON
+        // Read graphs from JSON
         String inputFile = "src/main/resources/input.json";
         String outputFile = "src/main/resources/output.json";
 
-        System.out.println("📖 Reading graphs from: " + inputFile);
+        System.out.println("Reading graphs from: " + inputFile);
         List<JSONProcessor.GraphData> graphDataList = JSONProcessor.readInputFile(inputFile);
 
-        System.out.println("📊 Found " + graphDataList.size() + " graphs to process\n");
+        System.out.println("Found " + graphDataList.size() + " graphs to process\n");
 
         List<JSONProcessor.OutputResult> results = new ArrayList<>();
         int processed = 0;
         int total = graphDataList.size();
 
-        // Обработка каждого графа
+        // Process each graph
         for (JSONProcessor.GraphData graphData : graphDataList) {
             processed++;
-            System.out.printf("🔍 [%d/%d] Processing Graph ID: %d%n",
+            System.out.printf("[%d/%d] Processing Graph ID: %d%n",
                     processed, total, graphData.id);
             System.out.println("   Vertices: " + graphData.graph.getVerticesCount());
             System.out.println("   Edges: " + graphData.graph.getEdgesCount());
             System.out.println("   Connected: " + graphData.graph.isConnected());
 
             if (!graphData.graph.isConnected()) {
-                System.out.println("   ⚠️  Skipping disconnected graph");
+                System.out.println("   Skipping disconnected graph");
                 continue;
             }
 
-            // Запуск алгоритмов
+            // Run algorithms
             PrimMST prim = new PrimMST();
             KruskalMST kruskal = new KruskalMST();
 
             MSTResult primResult = prim.findMST(graphData.graph);
             MSTResult kruskalResult = kruskal.findMST(graphData.graph);
 
-            // Валидация результатов
+            // Validate results
             boolean costsMatch = primResult.getTotalCost() == kruskalResult.getTotalCost();
             boolean bothValid = primResult.isValidMST() && kruskalResult.isValidMST();
 
-            System.out.printf("   ✅ Prim: cost=%d, time=%.3fms, ops=%d%n",
+            System.out.printf("   Prim: cost=%d, time=%.3fms, ops=%d%n",
                     primResult.getTotalCost(), primResult.getExecutionTime(),
                     primResult.getOperationsCount());
-            System.out.printf("   ✅ Kruskal: cost=%d, time=%.3fms, ops=%d%n",
+            System.out.printf("   Kruskal: cost=%d, time=%.3fms, ops=%d%n",
                     kruskalResult.getTotalCost(), kruskalResult.getExecutionTime(),
                     kruskalResult.getOperationsCount());
-            System.out.println("   📋 Validation: costsMatch=" + costsMatch +
+            System.out.println("   Validation: costsMatch=" + costsMatch +
                     ", bothValid=" + bothValid);
 
-            // Конвертация в выходной формат
+            // Convert to output format
             JSONProcessor.OutputResult outputResult = JSONProcessor.convertToOutputResult(
                     graphData.id, graphData.nodeNames, primResult, kruskalResult);
 
-            // Установка правильного количества ребер
+            // Set correct edge count
             outputResult.input_stats.edges = graphData.graph.getEdgesCount();
 
             results.add(outputResult);
 
-            // Прогресс каждые 5 графов
+            // Show progress every 5 graphs
             if (processed % 5 == 0) {
-                System.out.printf("📈 Progress: %d/%d (%.1f%%)%n%n",
+                System.out.printf("Progress: %d/%d (%.1f%%)%n%n",
                         processed, total, (processed * 100.0 / total));
             } else {
                 System.out.println();
             }
         }
 
-        // Запись результатов
-        System.out.println("💾 Writing results to: " + outputFile);
+        // Write results to output file
+        System.out.println("Writing results to: " + outputFile);
         JSONProcessor.writeOutputFile(outputFile, results);
 
         printSummary(results);
         printDetailedAnalysis(results);
 
-        // Генерация CSV файлов
+        // Generate CSV analytics
         generateCSVFiles(outputFile);
     }
 
     private static void generateCSVFiles(String outputJsonFile) {
-        System.out.println("📈 Generating CSV analysis...");
+        System.out.println("Generating CSV analysis...");
         try {
             CSVGenerator.generateCSV(
                     outputJsonFile,
@@ -152,9 +152,9 @@ public class Main {
                     "src/main/resources/summary_statistics.csv",
                     "src/main/resources/chart_data.csv"
             );
-            System.out.println("✅ CSV analysis files created!");
+            System.out.println("CSV analysis files created!");
         } catch (Exception e) {
-            System.err.println("❌ CSV generation failed: " + e.getMessage());
+            System.err.println("CSV generation failed: " + e.getMessage());
         }
     }
 
@@ -177,7 +177,6 @@ public class Main {
             totalPrimOps += result.prim.operations_count;
             totalKruskalOps += result.kruskal.operations_count;
 
-            // Подсчет побед
             if (result.prim.execution_time_ms < result.kruskal.execution_time_ms) {
                 primWins++;
             } else if (result.kruskal.execution_time_ms < result.prim.execution_time_ms) {
@@ -196,13 +195,12 @@ public class Main {
         System.out.printf("Prim wins: %d (%.1f%%)%n", primWins, (primWins * 100.0 / totalGraphs));
         System.out.printf("Kruskal wins: %d (%.1f%%)%n", kruskalWins, (kruskalWins * 100.0 / totalGraphs));
 
-        // Сравнение производительности
         if (avgPrimTime < avgKruskalTime) {
-            System.out.println("🎯 Prim was faster overall");
+            System.out.println("Prim was faster overall");
         } else if (avgPrimTime > avgKruskalTime) {
-            System.out.println("🎯 Kruskal was faster overall");
+            System.out.println("Kruskal was faster overall");
         } else {
-            System.out.println("🎯 Both algorithms performed similarly");
+            System.out.println("Both algorithms performed similarly");
         }
     }
 
@@ -211,7 +209,6 @@ public class Main {
         System.out.println("DETAILED PERFORMANCE ANALYSIS BY GRAPH SIZE");
         System.out.println("=".repeat(70));
 
-        // Группировка по размерам
         Map<String, List<JSONProcessor.OutputResult>> sizeGroups = new HashMap<>();
         sizeGroups.put("Small (5-30)", results.subList(0, 5));
         sizeGroups.put("Medium (50-300)", results.subList(5, 15));
@@ -236,7 +233,6 @@ public class Main {
                     .mapToInt(r -> r.kruskal.operations_count)
                     .average().orElse(0);
 
-            // Подсчет побед в категории
             long primWinsInCategory = groupResults.stream()
                     .filter(r -> r.prim.execution_time_ms < r.kruskal.execution_time_ms)
                     .count();
@@ -249,7 +245,6 @@ public class Main {
                     kruskalWinsInCategory, groupResults.size(), (kruskalWinsInCategory * 100.0 / groupResults.size()));
         }
 
-        // Анализ по плотности графов
         printDensityAnalysis(results);
     }
 
@@ -258,7 +253,6 @@ public class Main {
         System.out.println("PERFORMANCE ANALYSIS BY GRAPH DENSITY");
         System.out.println("=".repeat(70));
 
-        // Группировка по плотности
         Map<String, List<JSONProcessor.OutputResult>> densityGroups = new LinkedHashMap<>();
         densityGroups.put("Very Sparse (<0.1)", new ArrayList<>());
         densityGroups.put("Sparse (0.1-0.3)", new ArrayList<>());

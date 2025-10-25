@@ -13,7 +13,7 @@ public class MSTAnalyzer {
         System.out.println("  Connected: " + graph.isConnected());
 
         if (!graph.isConnected()) {
-            System.out.println("❌ Cannot compute MST - Graph is disconnected!");
+            System.out.println(" Cannot compute MST - Graph is disconnected!");
             return;
         }
 
@@ -41,9 +41,9 @@ public class MSTAnalyzer {
         System.out.println("  ✓ Correct edge count: " + primResult.hasCorrectEdgeCount());
 
         if (costsMatch && primValid && kruskalValid) {
-            System.out.println("\n🎉 ALL VALIDATIONS PASSED!");
+            System.out.println("\n ALL VALIDATIONS PASSED!");
         } else {
-            System.out.println("\n❌ SOME VALIDATIONS FAILED!");
+            System.out.println("\n SOME VALIDATIONS FAILED!");
         }
 
         // Performance comparison

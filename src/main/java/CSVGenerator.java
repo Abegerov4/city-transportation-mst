@@ -43,9 +43,9 @@ public class CSVGenerator {
             String summaryFile = "src/main/resources/summary_statistics.csv";
             String chartFile = "src/main/resources/chart_data.csv";
 
-            System.out.println("📊 Generating CSV analysis from: " + inputFile);
+            System.out.println("Generating CSV analysis from: " + inputFile);
             generateCSV(inputFile, outputFile, summaryFile, chartFile);
-            System.out.println("✅ CSV files created successfully!");
+            System.out.println("CSV files created successfully!");
 
         } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
@@ -55,34 +55,25 @@ public class CSVGenerator {
 
     public static void generateCSV(String jsonFilePath, String csvFilePath,
                                    String summaryFilePath, String chartFilePath) throws IOException {
-        // Read JSON data
         String content = new String(Files.readAllBytes(Paths.get(jsonFilePath)));
         OutputData outputData = mapper.readValue(content, OutputData.class);
 
-        // Generate detailed CSV
         generateDetailedCSV(outputData, csvFilePath);
-
-        // Generate summary statistics
         generateSummaryCSV(outputData, summaryFilePath);
-
-        // Generate chart data
         generateChartData(outputData, chartFilePath);
-
         printStatistics(outputData);
     }
 
     private static void generateDetailedCSV(OutputData outputData, String csvFilePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(csvFilePath))) {
-            // Write CSV header
             writer.println("GraphID,Vertices,Edges,PrimCost,PrimTimeMS,PrimOperations,KruskalCost,KruskalTimeMS,KruskalOperations,CostMatch,TimeDifferenceMS,OperationsDifference,PrimFaster,KruskalFaster,GraphSize,EdgeDensity");
 
-            // Write data rows
             for (OutputResult result : outputData.results) {
                 String csvLine = createDetailedCSVLine(result);
                 writer.println(csvLine);
             }
         }
-        System.out.println("📄 Detailed analysis: " + csvFilePath);
+        System.out.println("Detailed analysis: " + csvFilePath);
     }
 
     private static String createDetailedCSVLine(OutputResult result) {
@@ -90,28 +81,23 @@ public class CSVGenerator {
         int vertices = result.input_stats.vertices;
         int edges = result.input_stats.edges;
 
-        // Prim metrics
         int primCost = result.prim.total_cost;
         double primTime = result.prim.execution_time_ms;
         int primOps = result.prim.operations_count;
 
-        // Kruskal metrics
         int kruskalCost = result.kruskal.total_cost;
         double kruskalTime = result.kruskal.execution_time_ms;
         int kruskalOps = result.kruskal.operations_count;
 
-        // Analysis metrics
         boolean costMatch = (primCost == kruskalCost);
         double timeDiff = primTime - kruskalTime;
         int opsDiff = primOps - kruskalOps;
         boolean primFaster = primTime < kruskalTime;
         boolean kruskalFaster = kruskalTime < primTime;
 
-        // Graph characteristics
         String sizeCategory = getSizeCategory(vertices);
         double density = calculateDensity(vertices, edges);
 
-        // Create CSV line
         return String.format("%d,%d,%d,%d,%.3f,%d,%d,%.3f,%d,%b,%.3f,%d,%b,%b,%s,%.4f",
                 graphId, vertices, edges, primCost, primTime, primOps,
                 kruskalCost, kruskalTime, kruskalOps, costMatch, timeDiff,
@@ -120,7 +106,6 @@ public class CSVGenerator {
 
     private static void generateSummaryCSV(OutputData outputData, String summaryFilePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(summaryFilePath))) {
-            // Overall summary
             writer.println("SUMMARY STATISTICS");
             writer.println("==================");
             writer.println();
@@ -130,7 +115,6 @@ public class CSVGenerator {
             writeCategorySummary(writer, "Overall", outputData.results);
             writer.println();
 
-            // Size category summaries
             writer.println("Performance by Graph Size:");
             writer.println("SizeCategory,GraphCount,AvgVertices,AvgEdges,AvgPrimTimeMS,AvgKruskalTimeMS,AvgPrimOps,AvgKruskalOps,PrimFasterCount,KruskalFasterCount,PrimWinRate");
 
@@ -152,18 +136,16 @@ public class CSVGenerator {
             }
             writer.println();
 
-            // Density analysis
             writer.println("Performance by Edge Density:");
             writer.println("DensityCategory,GraphCount,AvgDensity,PrimWinRate,AvgTimeAdvantageMS");
             writeDensityAnalysis(writer, outputData.results);
             writer.println();
 
-            // Algorithm comparison
             writer.println("Algorithm Comparison:");
             writer.println("Metric,Prim,Kruskal,Advantage");
             writeAlgorithmComparison(writer, outputData.results);
         }
-        System.out.println("📊 Summary statistics: " + summaryFilePath);
+        System.out.println("Summary statistics: " + summaryFilePath);
     }
 
     private static void writeCategorySummary(PrintWriter writer, String category, List<OutputResult> results) {
@@ -252,8 +234,6 @@ public class CSVGenerator {
     private static void generateChartData(OutputData outputData, String chartFilePath) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(chartFilePath))) {
             writer.println("GraphSize,PrimTimeMS,KruskalTimeMS,PrimOperations,KruskalOperations,EdgeDensity");
-
-            // Sort by graph size for better charts
             outputData.results.sort(Comparator.comparingInt(r -> r.input_stats.vertices));
 
             for (OutputResult result : outputData.results) {
@@ -267,11 +247,11 @@ public class CSVGenerator {
                         density);
             }
         }
-        System.out.println("📈 Chart data: " + chartFilePath);
+        System.out.println("Chart data: " + chartFilePath);
     }
 
     private static void printStatistics(OutputData outputData) {
-        System.out.println("\n📊 ANALYSIS SUMMARY");
+        System.out.println("\nANALYSIS SUMMARY");
         System.out.println("===================");
 
         int totalGraphs = outputData.results.size();
@@ -284,7 +264,6 @@ public class CSVGenerator {
         System.out.printf("Prim wins: %d (%.1f%%)%n", primWins, (primWins * 100.0 / totalGraphs));
         System.out.printf("Kruskal wins: %d (%.1f%%)%n", kruskalWins, (kruskalWins * 100.0 / totalGraphs));
 
-        // Performance by size
         System.out.println("\nPerformance by Graph Size:");
         Map<String, List<OutputResult>> sizeGroups = new HashMap<>();
         for (OutputResult result : outputData.results) {

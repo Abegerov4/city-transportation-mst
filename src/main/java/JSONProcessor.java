@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public class JSONProcessor {
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    // Структуры для парсинга JSON
+    // Structures for parsing JSON
     public static class JsonGraph {
         public int id;
         public List<String> nodes;
@@ -59,7 +59,7 @@ public class JSONProcessor {
         public List<OutputResult> results;
     }
 
-    // Чтение input.json
+    // Read input.json
     public static List<GraphData> readInputFile(String filename) throws IOException {
         String content = new String(Files.readAllBytes(Paths.get(filename)));
         InputData inputData = mapper.readValue(content, InputData.class);
@@ -86,7 +86,7 @@ public class JSONProcessor {
         return edges;
     }
 
-    // Запись output.json
+    // Write output.json
     public static void writeOutputFile(String filename, List<OutputResult> results) throws IOException {
         OutputData outputData = new OutputData();
         outputData.results = results;
@@ -94,21 +94,21 @@ public class JSONProcessor {
         mapper.writerWithDefaultPrettyPrinter().writeValue(new File(filename), outputData);
     }
 
-    // Конвертация MST результата в выходной формат
+    // Convert MST result to output format
     public static OutputResult convertToOutputResult(int graphId, List<String> nodeNames,
                                                      MSTResult primResult, MSTResult kruskalResult) {
         OutputResult result = new OutputResult();
         result.graph_id = graphId;
 
-        // Input stats
+        // Input statistics
         result.input_stats = new InputStats();
         result.input_stats.vertices = primResult.getVertices();
-        result.input_stats.edges = -1; // Будет установлено позже
+        result.input_stats.edges = -1; // Will be set later
 
-        // Prim results
+        // Prim algorithm results
         result.prim = convertAlgorithmResult(primResult, nodeNames);
 
-        // Kruskal results
+        // Kruskal algorithm results
         result.kruskal = convertAlgorithmResult(kruskalResult, nodeNames);
 
         return result;
@@ -118,9 +118,9 @@ public class JSONProcessor {
         AlgorithmResult result = new AlgorithmResult();
         result.total_cost = mstResult.getTotalCost();
         result.operations_count = mstResult.getOperationsCount();
-        result.execution_time_ms = Math.round(mstResult.getExecutionTime() * 1000.0) / 1000.0; // Округление до 3 знаков
+        result.execution_time_ms = Math.round(mstResult.getExecutionTime() * 1000.0) / 1000.0; // Rounded to 3 decimals
 
-        // Конвертация ребер MST
+        // Convert MST edges to output format
         result.mst_edges = new ArrayList<>();
         for (Edge edge : mstResult.getMstEdges()) {
             String fromName = Graph.getNodeName(edge.getSource(), nodeNames);
@@ -131,7 +131,7 @@ public class JSONProcessor {
         return result;
     }
 
-    // Вспомогательный класс для хранения данных графа
+    // Helper class to store graph-related data
     public static class GraphData {
         public final int id;
         public final List<String> nodeNames;
@@ -144,9 +144,9 @@ public class JSONProcessor {
         }
     }
 
-    // Создание демо-графа для OOP демонстрации
+    // Create a demo graph for OOP demonstration
     public static Graph createDemoGraph() {
-        // Создаем простой граф вручную для демонстрации
+        // Create a simple demo graph manually
         Graph graph = new Graph(6);
         graph.addEdge(0, 1, 4);
         graph.addEdge(0, 2, 2);
